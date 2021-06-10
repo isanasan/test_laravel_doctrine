@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+        Yajra\Oci8\Oci8ServiceProvider::class,
     ],
 
     /*
