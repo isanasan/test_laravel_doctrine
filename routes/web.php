@@ -16,3 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('test-add', function (\Doctrine\ORM\EntityManagerInterface $em) {
+    $task = new \App\Entities\Task('Make test app', 'Create the test application for the Sitepoint article.');
+
+    $em->persist($task);
+    $em->flush();
+
+    return 'added!';
+});
+
+Route::get('test-find', function (\Doctrine\ORM\EntityManagerInterface $em) {
+    /* @var \App\Entities\Task $task */
+    $task = $em->find(App\Entities\Task::class, 1);
+
+    return $task->getName() . ' - ' . $task->getDescription();
+});
