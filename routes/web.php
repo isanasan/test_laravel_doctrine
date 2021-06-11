@@ -13,22 +13,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/tasks', 'App\Http\Controllers\TaskController@getIndex');
 
-Route::get('test-add', function (\Doctrine\ORM\EntityManagerInterface $em) {
-    $task = new \App\Entities\Task('Make test app', 'Create the test application for the Sitepoint article.');
+Route::group(['mddleware' => ['web']], function () {
+    Route::get('test-user', function (\Doctrine\ORM\EntityManagerInterface $em) {
+        $user = new \App\Entities\User('Francesco', 'francescomalatest@live.it');
+        $user->setPassword(bcrypt('12345678'));
 
-    $em->persist($task);
-    $em->flush();
+        $em->persist($user);
+        $em->flush();
+    });
 
-    return 'added!';
-});
+    Route::get('login', function () {
+        return view('login');
+    });
 
-Route::get('test-find', function (\Doctrine\ORM\EntityManagerInterface $em) {
-    /* @var \App\Entities\Task $task */
-    $task = $em->find(App\Entities\Task::class, 1);
+    Route::post('login', function (\Illuminate\Http\Request $request) {
+        if (\Auth::attempt([
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+        ])) {
+            return redirect('/');
+        }
+    });
 
-    return $task->getName() . ' - ' . $task->getDescription();
+    Route::get('logout', function () {
+        \Auth::logout();
+        return redirect('login');
+    });
+
+    Route::group(['middleware' => ['auth']], function () {
+        Route::resource('/', 'App\Http\Controllers\TaskController');
+    });
 });

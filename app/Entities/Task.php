@@ -32,6 +32,12 @@ class Task
      */
     private $isDone = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @var User
+     */
+    private $user;
+
     public function __construct($name, $description)
     {
         $this->name = $name;
@@ -75,5 +81,25 @@ class Task
         } else {
             $this->isDone = false;
         }
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set user
+     *
+     * @param User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 }
