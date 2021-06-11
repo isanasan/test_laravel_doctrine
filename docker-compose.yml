@@ -1,0 +1,12 @@
+version: '3'
+services:
+  php:
+    # image: ghcr.io/ginga-sys/staff
+    build:
+      context: ./_docker
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+      - "443:443"
+
